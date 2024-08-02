@@ -45,3 +45,45 @@
     transition: all 0.3s ease;
     user-select: none;
   }
+  .key:hover {
+    background-color: rgba(47, 47, 95, 0.7);
+    box-shadow: 0 0 15px #00ff00;
+  }
+  .key.active {
+    background-color: rgba(63, 63, 127, 0.7);
+    transform: scale(0.95);
+  }
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+  }
+  .slider {
+    -webkit-appearance: none;
+    width: 200px;
+    height: 15px;
+    border-radius: 5px;
+    background: rgba(31, 31, 63, 0.7);
+    outline: none;
+    opacity: 0.7;
+    transition: opacity .2s;
+  }
+  .slider:hover {
+    opacity: 1;
+  }
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #00ff00;
+    cursor: pointer;
+  }
