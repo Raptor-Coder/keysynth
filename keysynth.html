@@ -375,3 +375,59 @@ resetButton.addEventListener('click', () => {
   envelopeSlider.value = 0.1;
   accentSlider.value = 0.5;
   glideSlider.value = 0.1;
+
+  document.querySelectorAll('.waveform-option').forEach(opt => opt.classList.remove('active'));
+  document.querySelector('.waveform-option:first-child').classList.add('active');
+  currentWaveform = 'sawtooth';
+  
+  Object.values(oscillators).forEach(({ oscillator, filter, gainNode }) => {
+    oscillator.type = currentWaveform;
+    filter.frequency.setValueAtTime(500, audioContext.currentTime);
+    filter.Q.setValueAtTime(10, audioContext.currentTime);
+    gainNode.gain.setTargetAtTime(1, audioContext.currentTime, 0.01);
+  });
+});
+
+function resizeCanvas() {
+  backgroundCanvas.width = window.innerWidth;
+  backgroundCanvas.height = window.innerHeight;
+}
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+function drawBackgroundAnimation() {
+  requestAnimationFrame(drawBackgroundAnimation);
+  analyser.getByteTimeDomainData(dataArray);
+  
+  bgCtx.fillStyle = 'rgba(15, 15, 35, 1)';
+  bgCtx.fillRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
+  
+  bgCtx.lineWidth = 2;
+  bgCtx.strokeStyle = 'rgba(0, 255, 0, 0.5)';
+  
+  bgCtx.beginPath();
+  
+  const sliceWidth = backgroundCanvas.width * 1.0 / bufferLength;
+  let x = 0;
+  
+  for (let i = 0; i < bufferLength; i++) {
+    const v = (dataArray[i] / 128.0) - 1;
+    const y = (v * backgroundCanvas.height / 4) + (backgroundCanvas.height / 2);
+    
+    if (i === 0) {
+      bgCtx.moveTo(x, y);
+    } else {
+      bgCtx.lineTo(x, y);
+    }
+    
+    x += sliceWidth;
+  }
+  
+  bgCtx.lineTo(backgroundCanvas.width, backgroundCanvas.height / 2);
+  bgCtx.stroke();
+}
+
+drawBackgroundAnimation();
+</script>
+</body></html>
