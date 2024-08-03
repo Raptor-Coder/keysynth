@@ -166,3 +166,40 @@
 <canvas id="background-canvas"></canvas>
 <div class="container">
   <h1>Key.Synth</h1>
+<div class="waveform-selector">
+    <label class="waveform-option active">
+      <input type="radio" name="waveform" value="sawtooth" checked hidden>
+      <span class="waveform-bullet"></span>
+      <span class="waveform-label">Sawtooth</span>
+    </label>
+    <label class="waveform-option">
+      <input type="radio" name="waveform" value="square" hidden>
+      <span class="waveform-bullet"></span>
+      <span class="waveform-label">Square</span>
+    </label>
+    <label class="waveform-option">
+      <input type="radio" name="waveform" value="triangle" hidden>
+      <span class="waveform-bullet"></span>
+      <span class="waveform-label">Triangle</span>
+    </label>
+    <label class="waveform-option">
+      <input type="radio" name="waveform" value="sine" hidden>
+      <span class="waveform-bullet"></span>
+      <span class="waveform-label">Sine</span>
+    </label>
+  </div>
+  <div class="keyboard" id="keyboard">
+    <div class="keyboard-row" id="row1"></div>
+    <div class="keyboard-row" id="row2"></div>
+    <div class="keyboard-row" id="row3"></div>
+  </div>
+  <div class="controls">
+    <div class="control">
+      <label for="cutoff">Cutoff</label>
+      <input type="range" min="20" max="20000" value="500" class="slider" id="cutoff">
+    </div>
+    <div class="control">
+      <label for="resonance">Resonance</label>
+      <input type="range" min="0" max="30" value="10" class="slider" id="resonance">
+    </div>
+    <div class="control">
