@@ -246,3 +246,47 @@ const keys = ['QWERTYUIOP[]', 'ASDFGHJKL;\'', 'ZXCVBNM,./'].map(row => row.split
 
 const baseFrequency = 55;
 keys.reverse().forEach((row, rowIndex) => {
+row.forEach((key, keyIndex) => {
+    const frequency = baseFrequency * Math.pow(2, rowIndex + keyIndex / 12);
+    keyboardFrequencyMap[key] = frequency;
+  });
+});
+
+function createOscillator(frequency) {
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+  const filter = audioContext.createBiquadFilter();
+
+  oscillator.type = currentWaveform;
+  
+  const glideTime = parseFloat(glideSlider.value);
+  if (lastFrequency !== null && glideTime > 0) {
+    oscillator.frequency.setValueAtTime(lastFrequency, audioContext.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(frequency, audioContext.currentTime + glideTime);
+  } else {
+    oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+  }
+  
+  lastFrequency = frequency;
+
+  filter.type = 'lowpass';
+  filter.frequency.value = cutoffSlider.value;
+  filter.Q.value = resonanceSlider.value;
+
+  gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+  gainNode.gain.linearRampToValueAtTime(1, audioContext.currentTime + 0.01);
+
+  oscillator.connect(filter);
+  filter.connect(gainNode);
+  gainNode.connect(analyser);
+  analyser.connect(audioContext.destination);
+
+  oscillator.start();
+  return { oscillator, gainNode, filter };
+}
+
+function noteOn(note) {
+  if (!oscillators[note] && keyboardFrequencyMap[note]) {
+    oscillators[note] = createOscillator(keyboardFrequencyMap[note]);
+    const { gainNode, filter } = oscillators[note];
+    const accent = parseFloat(accentSlider.value);
